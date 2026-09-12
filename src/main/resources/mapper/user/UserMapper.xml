@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CodeGraph.user.mapper.UserMapper">
+
+    <!-- ========================================================= -->
+    <!-- Result Map -->
+    <!-- ========================================================= -->
+
+    <resultMap
+            id="UserResultMap"
+            type="com.CodeGraph.user.model.User">
+
+        <id
+                property="id"
+                column="id"/>
+
+        <result
+                property="email"
+                column="email"/>
+
+        <result
+                property="passwordHash"
+                column="password_hash"/>
+
+        <result
+                property="emailVerifiedAt"
+                column="email_verified_at"/>
+
+        <result
+                property="createdAt"
+                column="created_at"/>
+
+        <result
+                property="createdIp"
+                column="created_ip"/>
+
+        <result
+                property="updatedAt"
+                column="updated_at"/>
+
+        <result
+                property="updatedIp"
+                column="updated_ip"/>
+
+    </resultMap>
+
+
+    <!-- ========================================================= -->
+    <!-- Find by Email -->
+    <!-- ========================================================= -->
+
+    <select
+            id="findByEmail"
+            resultMap="UserResultMap">
+
+        SELECT
+        id,
+        email,
+        password_hash,
+        email_verified_at,
+        created_at,
+        created_ip,
+        updated_at,
+        updated_ip
+        FROM users
+        WHERE email = #{email}
+        LIMIT 1
+
+    </select>
+
+
+    <!-- ========================================================= -->
+    <!-- Insert User -->
+    <!-- ========================================================= -->
+
+    <insert
+            id="insert"
+            parameterType="com.CodeGraph.user.model.User"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+
+        INSERT INTO users (
+        email,
+        password_hash,
+        email_verified_at,
+        created_at,
+        created_ip
+        )
+        VALUES (
+        #{email},
+        #{passwordHash},
+        #{emailVerifiedAt},
+        #{createdAt},
+        #{createdIp}
+        )
+
+    </insert>
+
+    <!-- ========================================================= -->
+    <!-- Find by ID -->
+    <!-- ========================================================= -->
+
+    <select
+            id="findById"
+            resultMap="UserResultMap">
+
+        SELECT
+        id,
+        email,
+        password_hash,
+        email_verified_at,
+        created_at,
+        created_ip,
+        updated_at,
+        updated_ip
+        FROM users
+        WHERE id = #{id}
+        LIMIT 1
+
+    </select>
+
+</mapper>

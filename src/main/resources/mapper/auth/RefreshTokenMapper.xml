@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CodeGraph.auth.mapper.RefreshTokenMapper">
+
+    <!-- ========================================================= -->
+    <!-- Result Map -->
+    <!-- ========================================================= -->
+
+    <resultMap
+            id="RefreshTokenResultMap"
+            type="com.CodeGraph.auth.model.RefreshToken">
+
+        <id
+                property="id"
+                column="id"/>
+
+        <result
+                property="userId"
+                column="user_id"/>
+
+        <result
+                property="sessionId"
+                column="session_id" typeHandler="com.CodeGraph.common.mybatis.UUIDTypeHandler"/>
+
+        <result
+                property="tokenId"
+                column="token_id"/>
+
+        <result
+                property="tokenHash"
+                column="token_hash"/>
+
+        <result
+                property="createdAt"
+                column="created_at"/>
+
+        <result
+                property="createdIp"
+                column="created_ip"/>
+
+        <result
+                property="expiresAt"
+                column="expires_at"/>
+
+        <result
+                property="revokedAt"
+                column="revoked_at"/>
+
+    </resultMap>
+
+
+    <!-- ========================================================= -->
+    <!-- Insert -->
+    <!-- ========================================================= -->
+
+    <insert
+            id="insert"
+            parameterType="com.CodeGraph.auth.model.RefreshToken"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+
+        INSERT INTO refresh_tokens (
+        user_id,
+        session_id,
+        token_id,
+        token_hash,
+        created_at,
+        created_ip,
+        expires_at
+        )
+        VALUES (
+        #{userId},
+        #{sessionId, typeHandler=com.CodeGraph.common.mybatis.UUIDTypeHandler},
+        #{tokenId},
+        #{tokenHash},
+        #{createdAt},
+        #{createdIp},
+        #{expiresAt}
+        )
+
+    </insert>
+
+
+    <!-- ========================================================= -->
+    <!-- Find by JWT ID -->
+    <!-- ========================================================= -->
+
+    <select
+            id="findByTokenId"
+            resultMap="RefreshTokenResultMap">
+
+        SELECT
+        id,
+        user_id,
+        token_id,
+        session_id,
+        token_hash,
+        created_at,
+        created_ip,
+        expires_at,
+        revoked_at
+        FROM refresh_tokens
+        WHERE token_id = #{tokenId}
+        LIMIT 1
+
+    </select>
+
+
+    <!-- ========================================================= -->
+    <!-- Revoke -->
+    <!-- ========================================================= -->
+
+    <update id="revoke">
+
+        UPDATE refresh_tokens
+        SET revoked_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+        AND revoked_at IS NULL
+
+    </update>
+
+
+    <!-- ========================================================= -->
+    <!-- Revoke All User Tokens -->
+    <!-- ========================================================= -->
+
+    <update id="revokeAllByUserId">
+
+        UPDATE refresh_tokens
+        SET revoked_at = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+        AND revoked_at IS NULL
+
+    </update>
+
+    <update id="revokeBySessionId">
+
+        UPDATE refresh_tokens
+        SET revoked_at = CURRENT_TIMESTAMP
+        WHERE session_id = #{sessionId, typeHandler=com.CodeGraph.common.mybatis.UUIDTypeHandler}
+        AND revoked_at IS NULL
+
+    </update>
+
+
+</mapper>

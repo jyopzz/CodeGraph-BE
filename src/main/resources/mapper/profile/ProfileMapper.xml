@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CodeGraph.profile.mapper.ProfileMapper">
+
+    <select id="findByUserId"
+            parameterType="long"
+            resultType="com.CodeGraph.profile.model.Profile">
+
+        SELECT
+        id,
+        user_id,
+        display_name,
+        date_of_birth,
+        gender,
+        bio,
+        location,
+        created_at,
+        updated_at
+        FROM profiles
+        WHERE user_id = #{userId}
+
+    </select>
+
+    <insert id="save"
+            parameterType="com.CodeGraph.profile.model.Profile"
+            useGeneratedKeys="true"
+            keyProperty="id">
+
+        INSERT INTO profiles (
+        user_id,
+        display_name,
+        date_of_birth,
+        gender,
+        bio,
+        location
+        )
+        VALUES (
+        #{userId},
+        #{displayName},
+        #{dateOfBirth},
+        #{gender},
+        #{bio},
+        #{location}
+        )
+
+    </insert>
+
+    <update id="update">
+
+        UPDATE profiles
+
+        <set>
+
+            <if test="changedFields.containsKey('displayName')">
+                display_name = #{changedFields.displayName},
+            </if>
+
+            <if test="changedFields.containsKey('dateOfBirth')">
+                date_of_birth = #{changedFields.dateOfBirth},
+            </if>
+
+            <if test="changedFields.containsKey('gender')">
+                gender = #{changedFields.gender},
+            </if>
+
+            <if test="changedFields.containsKey('bio')">
+                bio = #{changedFields.bio},
+            </if>
+
+            <if test="changedFields.containsKey('location')">
+                location = #{changedFields.location},
+            </if>
+
+            updated_at = CURRENT_TIMESTAMP
+
+        </set>
+
+        WHERE user_id = #{userId}
+
+    </update>
+
+</mapper>
