@@ -1,6 +1,7 @@
 package com.CodeGraph.common.response;
 
 import com.CodeGraph.common.validation.BusinessValidation;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatus;
 
 public class BaseResponse<T> {
@@ -10,6 +11,9 @@ public class BaseResponse<T> {
     private BusinessValidation businessValidation;
     private boolean successful;
     private int responseCode;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Object metaData;
 
     public BaseResponse() {
     }
@@ -28,12 +32,47 @@ public class BaseResponse<T> {
         this.responseCode = responseCode;
     }
 
-    public static <T> BaseResponse<T> success(T data, String message, int responseCode) {
-        return new BaseResponse<>(data, message, null, true, responseCode);
+    public BaseResponse(
+            T data,
+            Object metaData,
+            String message,
+            BusinessValidation businessValidation,
+            boolean successful,
+            int responseCode) {
+
+        this.data = data;
+        this.metaData = metaData;
+        this.message = message;
+        this.businessValidation = businessValidation;
+        this.successful = successful;
+        this.responseCode = responseCode;
     }
 
-    public static <T> BaseResponse<T> success(T data, String message) {
-        return new BaseResponse<>(data, message, null, true, HttpStatus.OK.value());
+    public static <T> BaseResponse<T> success(
+            T data,
+            String message,
+            int responseCode) {
+
+        return new BaseResponse<>(
+                data,
+                message,
+                null,
+                true,
+                responseCode
+        );
+    }
+
+    public static <T> BaseResponse<T> success(
+            T data,
+            String message) {
+
+        return new BaseResponse<>(
+                data,
+                message,
+                null,
+                true,
+                HttpStatus.OK.value()
+        );
     }
 
     public T getData() {
@@ -76,5 +115,13 @@ public class BaseResponse<T> {
 
     public void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
+    }
+
+    public Object getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(Object metaData) {
+        this.metaData = metaData;
     }
 }
