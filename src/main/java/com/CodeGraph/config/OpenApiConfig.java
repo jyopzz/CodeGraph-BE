@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "Koode API",
+                title = "CodeGraph API",
                 version = "1.0",
-                description = "REST API for Koode"
+                description = "REST API for CodeGraph"
         )
 )
 public class OpenApiConfig {
